@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val wifiInfo = wifiManager.connectionInfo
-            val ssid = wifiInfo.ssid.replace(""", "")
+            val ssid = wifiInfo.ssid.replace("", "")
             val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
             val log = if (ssid == "YourOfficeWiFi") "เข้าออฟฟิศ: $time" else "ออกออฟฟิศ: $time"
             val file = File(getExternalFilesDir(null), "attendance_log.txt")
