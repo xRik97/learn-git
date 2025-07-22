@@ -18,12 +18,12 @@ class MainActivity : AppCompatActivity() {
     private val homeSSIDs = listOf("wonghan_2.4GHZ", "wonghan_5GHZ", "Wonghan_2.4GHZ_ext", "Wonghan_5GHZ_ext") // wifi home
     private var lastSSID: String? = null
 
-    private val webhookUrl = "https://script.google.com/macros/library/d/1YgTKZQQaYxpfxRe26ZF6lL_bMcbPJKcxvWuE-KEmHYINzcHGT7YJCqRt/1" // <= ใส่ URL ของคุณ
+    private val webhookUrl = "https://script.google.com/macros/s/AKfycbzSxxu3yVtgabyN-OMJVwsva4I3oJAXkdBAlnVt65d2MbKmfIUvNeGY7yc5AWhUc6es/exec" // <= ใส่ URL ของคุณ
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(TextView(this).apply {
-            text = "Wi-Fi Attendance Logger กำลังทำงาน..."
+            text = "Wi-Fi Attendance Logger กำลังทำงาน.."
         })
 
         registerReceiver(wifiReceiver, IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION))
@@ -77,13 +77,14 @@ class MainActivity : AppCompatActivity() {
             .post(json.toString().toRequestBody("application/json".toMediaType()))
             .build()
 
-        OkHttpClient().newCall(request).enqueue(object : Callback {
+        OkHttpClient().newCall(request).enqueue(responseCallback = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("WifiLogger", "ส่งข้อมูลล้มเหลว", e)
             }
 
             override fun onResponse(call: Call, response: Response) {
-                Log.i("WifiLogger", "ส่งข้อมูลสำเร็จ: ${response.body?.string()}")
+                val bodyString = response.body?.string()
+                Log.i("WifiLogger", "ส่งข้อมูลสำเร็จ: $bodyString")
             }
         })
     }
